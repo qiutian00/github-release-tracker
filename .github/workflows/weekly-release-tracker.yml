@@ -25,12 +25,14 @@ jobs:
           # 安装我们开发的包
           npm install -g .
       
-      - name: Get current week number and year
+      - name: Get current week number, month, and year
         id: date
         run: |
           WEEK=$(date +"%V")
+          MONTH=$(date +"%m")
           YEAR=$(date +"%Y")
           echo "week=$WEEK" >> $GITHUB_OUTPUT
+          echo "month=$MONTH" >> $GITHUB_OUTPUT
           echo "year=$YEAR" >> $GITHUB_OUTPUT
       
       - name: Create output directory if not exists
@@ -42,7 +44,7 @@ jobs:
             --token ${{ secrets.GH_TOKEN }} \
             --starred \
             --days 7 \
-            --output "output/${{ steps.date.outputs.year }}年第${{ steps.date.outputs.week }}周.md"
+            --output "output/${{ steps.date.outputs.year }}年${{ steps.date.outputs.month }}月第${{ steps.date.outputs.week }}周.md"
         env:
           GH_TOKEN: ${{ secrets.GH_TOKEN }}
       
