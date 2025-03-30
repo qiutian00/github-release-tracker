@@ -1,0 +1,59 @@
+name: Weekly GitHub Releases Tracker
+
+on:
+  schedule:
+    # 每周一早上 5 点运行 (UTC 时间，对应北京时间 13:00)
+    - cron: '0 5 * * 1'
+  workflow_dispatch:  # 允许手动触发工作流
+
+jobs:
+  track-releases:
+    name: Track Weekly GitHub Releases
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '18'
+          
+      - name: Install dependencies
+        run: |
+          npm install
+          # 安装我们开发的包
+          npm install -g .
+      
+      - name: Get current week number and year
+        id: date
+        run: |
+          WEEK=$(date +"%V")
+          YEAR=$(date +"%Y")
+          echo "week=$WEEK" >> $GITHUB_OUTPUT
+          echo "year=$YEAR" >> $GITHUB_OUTPUT
+      
+      - name: Create output directory if not exists
+        run: mkdir -p output
+      
+      - name: Run GitHub Release Tracker
+        run: |
+          github-release-tracker \
+            --token ${{ secrets.GITHUB_TOKEN }} \
+            --starred \
+            --days 7 \
+            --output "output/${{ steps.date.outputs.year }}年第${{ steps.date.outputs.week }}周.md"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      
+      - name: Commit and push if there are changes
+        run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
+          
+          git add output/
+          
+          # 尝试提交更改，如果没有更改则不会失败
+          git commit -m "Update releases for ${{ steps.date.outputs.year }} week ${{ steps.date.outputs.week }}" || echo "No changes to commit"
+          
+          git push
