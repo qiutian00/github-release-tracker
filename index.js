@@ -24,9 +24,11 @@ async function trackNewReleases(token, trackType = 'starred', days = 7) {
   
   // 获取每个仓库的最近发布
   const releasesByRepo = [];
-  for (const repo of repos) {
+  for (const [index, repo] of repos.entries()) {
     const releases = await github.getRecentReleases(repo.fullName, days);
-    console.log(`正在检查仓库: ${repo.fullName}`);
+    // console.log(`正在检查仓库: ${repo.fullName}`);
+    // 真正检查第几个仓库
+    console.log(`正在检查第 ${index + 1} 个仓库: ${repo.fullName}`);
     if (releases.length > 0) {
       console.log(` ${repo.fullName} - 发现 ${releases.length} 个新版本`);
       releasesByRepo.push({ repo, releases });
