@@ -26,8 +26,12 @@ async function trackNewReleases(token, trackType = 'starred', days = 7) {
   const releasesByRepo = [];
   for (const repo of repos) {
     const releases = await github.getRecentReleases(repo.fullName, days);
+    console.log(`正在检查仓库: ${repo.fullName}`);
     if (releases.length > 0) {
+      console.log(` ${repo.fullName} - 发现 ${releases.length} 个新版本`);
       releasesByRepo.push({ repo, releases });
+    } else {
+      console.log(` ${repo.fullName} - 没有新版本发布`);
     }
   }
 
