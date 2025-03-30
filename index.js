@@ -25,6 +25,10 @@ async function trackNewReleases(token, trackType = 'starred', days = 7) {
   // 获取每个仓库的最近发布
   const releasesByRepo = [];
   for (const [index, repo] of repos.entries()) {
+    // 限制访问50个仓库
+    if (index > 50) {
+      break;
+    }
     const releases = await github.getRecentReleases(repo.fullName, days);
     // console.log(`正在检查仓库: ${repo.fullName}`);
     // 真正检查第几个仓库
