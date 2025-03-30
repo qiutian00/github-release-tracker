@@ -39,12 +39,12 @@ jobs:
       - name: Run GitHub Release Tracker
         run: |
           github-release-tracker \
-            --token ${{ secrets.GITHUB_TOKEN }} \
+            --token ${{ secrets.GH_TOKEN }} \
             --starred \
             --days 7 \
             --output "output/${{ steps.date.outputs.year }}年第${{ steps.date.outputs.week }}周.md"
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
       
       - name: Commit and push if there are changes
         run: |
