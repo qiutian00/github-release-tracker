@@ -46,7 +46,7 @@ jobs:
             --days 7 \
             --output "output/${{ steps.date.outputs.year }}年${{ steps.date.outputs.month }}月第${{ steps.date.outputs.week }}周.md"
         env:
-          GH_TOKEN: ${{ secrets.GH_TOKEN }}
+          GH_TOKEN: ${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}
       
       - name: Commit and push if there are changes
         run: |
@@ -56,6 +56,8 @@ jobs:
           git add output/
           
           # 尝试提交更改，如果没有更改则不会失败
-          git commit -m "Update releases for ${{ steps.date.outputs.year }} week ${{ steps.date.outputs.week }}" || echo "No changes to commit"
+          git commit -m "Update releases for ${{ steps.date.outputs.year }}年${{ steps.date.outputs.month }}月第${{ steps.date.outputs.week }}周" || echo "No changes to commit"
           
           git push
+        env:
+          GH_TOKEN: ${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}
