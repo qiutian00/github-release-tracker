@@ -46,7 +46,7 @@ jobs:
             --days 7 \
             --output "output/${{ steps.date.outputs.year }}年${{ steps.date.outputs.month }}月第${{ steps.date.outputs.week }}周.md"
         env:
-          GH_TOKEN: ${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
       
       - name: Commit and push if there are changes
         run: |
@@ -60,4 +60,4 @@ jobs:
           
           git push
         env:
-          GH_TOKEN: ${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}
+          GH_TOKEN: ${{ secrets.GH_TOKEN }}
